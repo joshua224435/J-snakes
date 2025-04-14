@@ -3,7 +3,7 @@
 Welcome to my version of the classic **Snake Game**, built using HTML, CSS, and JavaScript!
 
 ## Demo
-**Play here:** [Live Game]*(https://joshua224435.github.io/J-snakes/)  
+**Play here:** [Live Game](https://joshua224435.github.io/J-snakes/)  
 ## Features
 - Classic snake movement and collision
 - Food appears randomly
