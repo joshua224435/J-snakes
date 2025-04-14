@@ -3,7 +3,7 @@
 Welcome to my version of the classic **Snake Game**, built using HTML, CSS, and JavaScript!
 
 ## Demo
-**Play here:** [Live Game](https://your-username.github.io/your-repo-name/)  
+**Play here:** [Live Game]*(https://joshua224435.github.io/J-snakes/)  
 *(Replace the link above with your real GitHub Pages link after deploying)*
 
 ## Features
