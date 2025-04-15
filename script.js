@@ -88,3 +88,6 @@ function restartGame() {
 
 // Start the game
 game = setInterval(draw, 100);
+function restartGame() {
+  location.reload();
+}
