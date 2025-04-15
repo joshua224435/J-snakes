@@ -5,32 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Snake Game by Jake</title>
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
     body {
-      background-color: #121212;
+      background-color: #111;
       color: white;
       font-family: 'Segoe UI', sans-serif;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
     }
     canvas {
-      background-color: #1e1e1e;
-      border: 3px solid lime;
-      margin-top: 20px;
-    }
-    #controls {
-      margin-top: 15px;
-    }
-    button {
-      margin: 5px;
-      padding: 10px 20px;
-      background-color: #0f0;
-      border: none;
-      border-radius: 5px;
-      color: #000;
-      font-weight: bold;
+      background-color: #222;
+      border: 2px solid #0f0;
     }
     #score {
       margin-top: 10px;
       font-size: 18px;
+    }
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .controls-row {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .controls button {
+      background: #0f0;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      font-size: 20px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -38,34 +57,35 @@
   <h1>Snake Game by Jake</h1>
   <canvas id="gameCanvas" width="400" height="400"></canvas>
   <div id="score">Score: 0</div>
-  <div id="controls">
-    <button onclick="direction='LEFT'">←</button>
-    <button onclick="direction='UP'">↑</button>
-    <button onclick="direction='DOWN'">↓</button>
-    <button onclick="direction='RIGHT'">→</button>
-  </div>
-  <button onclick="location.reload()">Restart Game</button>
 
-  <!-- Sound Effects -->
-  <audio id="eatSound" src="https://actions.google.com/sounds/v1/cartoon/pop.ogg" preload="auto"></audio>
-  <audio id="deadSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+  <!-- On-screen arrow keys -->
+  <div class="controls">
+    <div class="controls-row">
+      <button onclick="setDirection('UP')">↑</button>
+    </div>
+    <div class="controls-row">
+      <button onclick="setDirection('LEFT')">←</button>
+      <button onclick="setDirection('DOWN')">↓</button>
+      <button onclick="setDirection('RIGHT')">→</button>
+    </div>
+  </div>
+
+  <audio id="eatSound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
 
   <script>
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
-
     const box = 20;
     let score = 0;
-    let snake = [{ x: 9 * box, y: 10 * box }];
-    let direction;
-
-    let food = {
-      x: Math.floor(Math.random() * 20) * box,
-      y: Math.floor(Math.random() * 20) * box
-    };
+    let direction = null;
 
     const eatSound = document.getElementById("eatSound");
-    const deadSound = document.getElementById("deadSound");
+
+    let snake = [{ x: 9 * box, y: 10 * box }];
+    let food = {
+      x: Math.floor(Math.random() * (canvas.width / box)) * box,
+      y: Math.floor(Math.random() * (canvas.height / box)) * box
+    };
 
     document.addEventListener("keydown", event => {
       if (event.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
@@ -74,59 +94,60 @@
       else if (event.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
     });
 
-    function draw() {
+    function setDirection(dir) {
+      if (dir === "LEFT" && direction !== "RIGHT") direction = "LEFT";
+      else if (dir === "UP" && direction !== "DOWN") direction = "UP";
+      else if (dir === "RIGHT" && direction !== "LEFT") direction = "RIGHT";
+      else if (dir === "DOWN" && direction !== "UP") direction = "DOWN";
+    }
+
+    function drawGame() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw snake
       for (let i = 0; i < snake.length; i++) {
-        ctx.fillStyle = i === 0 ? "lime" : "lightgreen";
+        ctx.fillStyle = i === 0 ? "#0f0" : "#fff";
         ctx.fillRect(snake[i].x, snake[i].y, box, box);
       }
 
-      // Draw food
-      ctx.fillStyle = "red";
-      ctx.beginPath();
-      ctx.arc(food.x + box / 2, food.y + box / 2, box / 2.5, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.fillStyle = "#f00";
+      ctx.fillRect(food.x, food.y, box, box);
 
-      // Move snake
       let headX = snake[0].x;
       let headY = snake[0].y;
 
       if (direction === "LEFT") headX -= box;
-      if (direction === "RIGHT") headX += box;
       if (direction === "UP") headY -= box;
+      if (direction === "RIGHT") headX += box;
       if (direction === "DOWN") headY += box;
 
-      // Game over
-      if (
-        headX < 0 || headX >= canvas.width ||
-        headY < 0 || headY >= canvas.height ||
-        snake.some(segment => segment.x === headX && segment.y === headY)
-      ) {
-        deadSound.play();
-        clearInterval(game);
-      }
-
-      let newHead = { x: headX, y: headY };
-
-      // Eat food
       if (headX === food.x && headY === food.y) {
         score++;
-        document.getElementById("score").innerText = "Score: " + score;
         eatSound.play();
         food = {
-          x: Math.floor(Math.random() * 20) * box,
-          y: Math.floor(Math.random() * 20) * box
+          x: Math.floor(Math.random() * (canvas.width / box)) * box,
+          y: Math.floor(Math.random() * (canvas.height / box)) * box
         };
       } else {
         snake.pop();
       }
 
+      const newHead = { x: headX, y: headY };
+
+      // Game over conditions
+      if (
+        headX < 0 || headX >= canvas.width ||
+        headY < 0 || headY >= canvas.height ||
+        snake.some(segment => segment.x === newHead.x && segment.y === newHead.y)
+      ) {
+        clearInterval(game);
+        alert("Game Over! Refresh to play again.");
+      }
+
       snake.unshift(newHead);
+      document.getElementById("score").textContent = "Score: " + score;
     }
 
-    const game = setInterval(draw, 150);
+    let game = setInterval(drawGame, 150);
   </script>
 </body>
-  </html>
+</html>
