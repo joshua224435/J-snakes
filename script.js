@@ -25,7 +25,18 @@ function setDirection(event) {
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+function restartGame() {
+  score = 0;
+  snake = [{ x: 9 * box, y: 10 * box }];
+  direction = null;
+  food = {
+    x: Math.floor(Math.random() * (canvasSize / box)) * box,
+    y: Math.floor(Math.random() * (canvasSize / box)) * box
+  };
+  document.getElementById("score").textContent = "Score: " + score;
+  clearInterval(game);
+  game = setInterval(drawGame, 150);
+           }
   // Draw snake
   for (let i = 0; i < snake.length; i++) {
     ctx.fillStyle = i === 0 ? '#0f0' : '#fff';
