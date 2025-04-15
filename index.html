@@ -1,15 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Snake Game by Jake</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
     body {
       background-color: #121212;
       color: white;
@@ -19,16 +13,30 @@
       align-items: center;
       padding-top: 30px;
     }
+
     h1 {
       margin-bottom: 20px;
     }
+
     canvas {
       background-color: #222;
       border: 2px solid #0f0;
     }
+
     #score {
       margin-top: 10px;
       font-size: 18px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #0f0;
+      border: none;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 8px;
     }
   </style>
 </head>
@@ -36,7 +44,8 @@
   <h1>Snake Game by Jake</h1>
   <canvas id="gameCanvas" width="400" height="400"></canvas>
   <div id="score">Score: 0</div>
-<button onclick="restartGame()" style="margin-top: 10px; padding: 10px 20px; font-size: 16px;">Restart</button>
+  <button onclick="restartGame()">Restart Game</button>
+
   <script src="script.js"></script>
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d
+</body>
+</html>
